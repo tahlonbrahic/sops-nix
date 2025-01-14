@@ -30,21 +30,20 @@ in {
       before = ["systemd-sysusers.service"];
       environment = cfg.environment;
       unitConfig.DefaultDependencies = "no";
-      path = let
-        path = config.systemd.services.sops-install-secrets.path;
-      in
-        lib.mkForce "${lib.makeBinPath path}:${lib.makeSearchPathOutput "bin" "sbin" path}";
-      systemd.services.sops-install-secrets.path = lib.lists.optionals (config.sops.environment ? PATH) (lib.pipe config.sops.environment.PATH [
-        (lib.strings.splitString ":")
-        (builtins.map (lib.strings.removeSuffix "/bin"))
-      ]);
-
       serviceConfig = {
         Type = "oneshot";
         ExecStart = ["${cfg.package}/bin/sops-install-secrets -ignore-passwd ${manifestForUsers}"];
         RemainAfterExit = true;
       };
     };
+  systemd.services.sops-install-secrets.environment.PATH = let
+    path = config.systemd.services.sops-install-secrets.path;
+  in
+    lib.mkForce "${lib.makeBinPath path}:${lib.makeSearchPathOutput "bin" "sbin" path}";
+  systemd.services.sops-install-secrets.path = lib.lists.optionals (config.sops.environment ? PATH) (lib.pipe config.sops.environment.PATH [
+    (lib.strings.splitString ":")
+    (builtins.map (lib.strings.removeSuffix "/bin"))
+  ]);
 
   system.activationScripts = lib.mkIf (secretsForUsers != {} && !useSystemdActivation) {
     setupSecretsForUsers =
