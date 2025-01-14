@@ -4,9 +4,7 @@
   lib,
   pkgs,
   ...
-}:
-
-let
+}: let
   cfg = config.sops;
   users = config.users.users;
   sops-install-secrets = cfg.package;
@@ -14,7 +12,7 @@ let
     inherit cfg;
     inherit (pkgs) writeTextFile;
   };
-  manifest = manifestFor "" regularSecrets regularTemplates { };
+  manifest = manifestFor "" regularSecrets regularTemplates {};
 
   pathNotInStore = lib.mkOptionType {
     name = "pathNotInStore";
@@ -37,8 +35,7 @@ let
     inherit cfg lib;
   };
   secretType = lib.types.submodule (
-    { config, ... }:
-    {
+    {config, ...}: {
       config = {
         sopsFile = lib.mkOptionDefault cfg.defaultSopsFile;
         sopsFileHash = lib.mkOptionDefault (
@@ -55,7 +52,10 @@ let
         };
         key = lib.mkOption {
           type = lib.types.str;
-          default = if cfg.defaultSopsKey != null then cfg.defaultSopsKey else config._module.args.name;
+          default =
+            if cfg.defaultSopsKey != null
+            then cfg.defaultSopsKey
+            else config._module.args.name;
           description = ''
             Key used to lookup in the sops file.
             No tested data structures are supported right now.
@@ -66,10 +66,9 @@ let
         path = lib.mkOption {
           type = lib.types.str;
           default =
-            if config.neededForUsers then
-              "/run/secrets-for-users/${config.name}"
-            else
-              "/run/secrets/${config.name}";
+            if config.neededForUsers
+            then "/run/secrets-for-users/${config.name}"
+            else "/run/secrets/${config.name}";
           defaultText = "/run/secrets-for-users/$name when neededForUsers is set, /run/secrets/$name when otherwise.";
           description = ''
             Path where secrets are symlinked to.
@@ -113,7 +112,10 @@ let
         };
         group = lib.mkOption {
           type = with lib.types; nullOr str;
-          default = if config.owner != null then users.${config.owner}.group else null;
+          default =
+            if config.owner != null
+            then users.${config.owner}.group
+            else null;
           defaultText = lib.literalMD "{option}`config.users.users.\${owner}.group`";
           description = ''
             Group of the file. Can only be set if gid is 0.
@@ -142,8 +144,8 @@ let
         };
         restartUnits = lib.mkOption {
           type = lib.types.listOf lib.types.str;
-          default = [ ];
-          example = [ "sshd.service" ];
+          default = [];
+          example = ["sshd.service"];
           description = ''
             Names of units that should be restarted when this secret changes.
             This works the same way as <xref linkend="opt-systemd.services._name_.restartTriggers" />.
@@ -151,8 +153,8 @@ let
         };
         reloadUnits = lib.mkOption {
           type = lib.types.listOf lib.types.str;
-          default = [ ];
-          example = [ "sshd.service" ];
+          default = [];
+          example = ["sshd.service"];
           description = ''
             Names of units that should be reloaded when this secret changes.
             This works the same way as <xref linkend="opt-systemd.services._name_.reloadTriggers" />.
@@ -172,22 +174,21 @@ let
   );
 
   # Skip ssh keys deployed with sops to avoid a catch 22
-  defaultImportKeys =
-    algo:
-    if config.services.openssh.enable then
+  defaultImportKeys = algo:
+    if config.services.openssh.enable
+    then
       map (e: e.path) (
         lib.filter (
           e: e.type == algo && !(lib.hasPrefix "/run/secrets" e.path)
-        ) config.services.openssh.hostKeys
+        )
+        config.services.openssh.hostKeys
       )
-    else
-      [ ];
-in
-{
+    else [];
+in {
   options.sops = {
     secrets = lib.mkOption {
       type = lib.types.attrsOf secretType;
-      default = { };
+      default = {};
       description = ''
         Path where the latest secrets are mounted to.
       '';
@@ -251,7 +252,7 @@ in
 
     environment = lib.mkOption {
       type = lib.types.attrsOf (lib.types.either lib.types.str lib.types.path);
-      default = { };
+      default = {};
       description = ''
         Environment variables to set before calling sops-install-secrets.
 
@@ -266,7 +267,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = (pkgs.callPackage ../.. { }).sops-install-secrets;
+      default = (pkgs.callPackage ../.. {}).sops-install-secrets;
       defaultText = lib.literalExpression "(pkgs.callPackage ../.. {}).sops-install-secrets";
       description = ''
         sops-install-secrets package to use.
@@ -276,10 +277,9 @@ in
     validationPackage = lib.mkOption {
       type = lib.types.package;
       default =
-        if pkgs.stdenv.buildPlatform == pkgs.stdenv.hostPlatform then
-          sops-install-secrets
-        else
-          (pkgs.pkgsBuildHost.callPackage ../.. { }).sops-install-secrets;
+        if pkgs.stdenv.buildPlatform == pkgs.stdenv.hostPlatform
+        then sops-install-secrets
+        else (pkgs.pkgsBuildHost.callPackage ../.. {}).sops-install-secrets;
       defaultText = lib.literalExpression "config.sops.package";
 
       description = ''
@@ -322,7 +322,7 @@ in
       plugins = lib.mkOption {
         type = lib.types.listOf lib.types.package;
         default = [
-            pkgs.age-plugin-fido2-hmac
+          pkgs.age-plugin-fido2-hmac
         ];
         description = ''
           List of plugins to use for sops decryption.
@@ -373,7 +373,8 @@ in
   imports = [
     ./templates
     ./secrets-for-users
-    (lib.mkRenamedOptionModule
+    (
+      lib.mkRenamedOptionModule
       [
         "sops"
         "gnupgHome"
@@ -384,7 +385,8 @@ in
         "home"
       ]
     )
-    (lib.mkRenamedOptionModule
+    (
+      lib.mkRenamedOptionModule
       [
         "sops"
         "sshKeyPaths"
@@ -397,19 +399,20 @@ in
     )
   ];
   config = lib.mkMerge [
-    (lib.mkIf (cfg.secrets != { }) {
+    (lib.mkIf (cfg.secrets != {}) {
       assertions =
         [
           {
             assertion =
-              cfg.gnupg.home != null
-              || cfg.gnupg.sshKeyPaths != [ ]
+              cfg.gnupg.home
+              != null
+              || cfg.gnupg.sshKeyPaths != []
               || cfg.age.keyFile != null
-              || cfg.age.sshKeyPaths != [ ];
+              || cfg.age.sshKeyPaths != [];
             message = "No key source configured for sops. Either set services.openssh.enable or set sops.age.keyFile or sops.gnupg.home";
           }
           {
-            assertion = !(cfg.gnupg.home != null && cfg.gnupg.sshKeyPaths != [ ]);
+            assertion = !(cfg.gnupg.home != null && cfg.gnupg.sshKeyPaths != []);
             message = "Exactly one of sops.gnupg.home and sops.gnupg.sshKeyPaths must be set";
           }
         ]
@@ -434,55 +437,55 @@ in
                 assertion = secret.gid != null && secret.gid != 0 -> secret.group == null;
                 message = "In ${secret.name} exactly one of sops.group and sops.gid must be set";
               }
-            ]) cfg.secrets
+            ])
+            cfg.secrets
           )
         );
 
-      sops.environment.SOPS_GPG_EXEC = lib.mkIf (cfg.gnupg.home != null || cfg.gnupg.sshKeyPaths != [ ]) (
+      sops.environment.SOPS_GPG_EXEC = lib.mkIf (cfg.gnupg.home != null || cfg.gnupg.sshKeyPaths != []) (
         lib.mkDefault "${pkgs.gnupg}/bin/gpg"
       );
-      sops.environment.PATH= lib.makeBinPath cfg.age.plugins;
+      sops.environment.PATH = lib.makeBinPath cfg.age.plugins;
 
       # When using sysusers we no longer are started as an activation script because those are started in initrd while sysusers is started later.
-      systemd.services.sops-install-secrets = lib.mkIf (regularSecrets != { } && useSystemdActivation) {
-        wantedBy = [ "sysinit.target" ];
-        after = [ "systemd-sysusers.service" ];
+      systemd.services.sops-install-secrets = lib.mkIf (regularSecrets != {} && useSystemdActivation) {
+        wantedBy = ["sysinit.target"];
+        after = ["systemd-sysusers.service"];
         environment = cfg.environment;
         unitConfig.DefaultDependencies = "no";
 
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = [ "${cfg.package}/bin/sops-install-secrets ${manifest}" ];
+          ExecStart = ["${cfg.package}/bin/sops-install-secrets ${manifest}"];
           RemainAfterExit = true;
         };
       };
 
       system.activationScripts = {
-        setupSecrets = lib.mkIf (regularSecrets != { } && !useSystemdActivation) (
+        setupSecrets = lib.mkIf (regularSecrets != {} && !useSystemdActivation) (
           lib.stringAfter
-            (
-              [
-                "specialfs"
-                "users"
-                "groups"
-              ]
-              ++ lib.optional cfg.age.generateKey "generate-age-key"
-            )
-            ''
-              [ -e /run/current-system ] || echo setting up secrets...
-              ${withEnvironment "${sops-install-secrets}/bin/sops-install-secrets ${manifest}"}
-            ''
+          (
+            [
+              "specialfs"
+              "users"
+              "groups"
+            ]
+            ++ lib.optional cfg.age.generateKey "generate-age-key"
+          )
+          ''
+            [ -e /run/current-system ] || echo setting up secrets...
+            ${withEnvironment "${sops-install-secrets}/bin/sops-install-secrets ${manifest}"}
+          ''
           // lib.optionalAttrs (config.system ? dryActivationScript) {
             supportsDryActivation = true;
           }
         );
 
-        generate-age-key =
-          let
-            escapedKeyFile = lib.escapeShellArg cfg.age.keyFile;
-          in
+        generate-age-key = let
+          escapedKeyFile = lib.escapeShellArg cfg.age.keyFile;
+        in
           lib.mkIf cfg.age.generateKey (
-            lib.stringAfter [ ] ''
+            lib.stringAfter [] ''
               if [[ ! -f ${escapedKeyFile} ]]; then
                 echo generating machine-specific age key...
                 mkdir -p $(dirname ${escapedKeyFile})
