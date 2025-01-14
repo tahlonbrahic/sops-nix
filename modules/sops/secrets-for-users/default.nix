@@ -4,11 +4,10 @@
   config,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.sops;
   secretsForUsers = lib.filterAttrs (_: v: v.neededForUsers) cfg.secrets;
-  templatesForUsers = { }; # We do not currently support `neededForUsers` for templates.
+  templatesForUsers = {}; # We do not currently support `neededForUsers` for templates.
   manifestFor = pkgs.callPackage ../manifest-for.nix {
     inherit cfg;
     inherit (pkgs) writeTextFile;
@@ -23,26 +22,26 @@ let
   sysusersEnabled = options.systemd ? sysusers && config.systemd.sysusers.enable;
   useSystemdActivation =
     sysusersEnabled || (options.services ? userborn && config.services.userborn.enable);
-in
-{
+in {
   systemd.services.sops-install-secrets-for-users =
-    lib.mkIf (secretsForUsers != { } && useSystemdActivation)
-      {
-        wantedBy = [ "systemd-sysusers.service" ];
-        before = [ "systemd-sysusers.service" ];
-        environment = cfg.environment;
-        unitConfig.DefaultDependencies = "no";
+    lib.mkIf (secretsForUsers != {} && useSystemdActivation)
+    {
+      wantedBy = ["systemd-sysusers.service"];
+      before = ["systemd-sysusers.service"];
+      environment = cfg.environment;
+      unitConfig.DefaultDependencies = "no";
+      path = cfg.age.plugins;
 
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = [ "${cfg.package}/bin/sops-install-secrets -ignore-passwd ${manifestForUsers}" ];
-          RemainAfterExit = true;
-        };
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = ["${cfg.package}/bin/sops-install-secrets -ignore-passwd ${manifestForUsers}"];
+        RemainAfterExit = true;
       };
+    };
 
-  system.activationScripts = lib.mkIf (secretsForUsers != { } && !useSystemdActivation) {
+  system.activationScripts = lib.mkIf (secretsForUsers != {} && !useSystemdActivation) {
     setupSecretsForUsers =
-      lib.stringAfter ([ "specialfs" ] ++ lib.optional cfg.age.generateKey "generate-age-key") ''
+      lib.stringAfter (["specialfs"] ++ lib.optional cfg.age.generateKey "generate-age-key") ''
         [ -e /run/current-system ] || echo setting up secrets for users...
         ${withEnvironment "${cfg.package}/bin/sops-install-secrets -ignore-passwd ${manifestForUsers}"}
       ''
@@ -50,19 +49,21 @@ in
         supportsDryActivation = true;
       };
 
-    users.deps = [ "setupSecretsForUsers" ];
+    users.deps = ["setupSecretsForUsers"];
   };
 
   assertions = [
     {
       assertion =
         (lib.filterAttrs (
-          _: v: (v.uid != 0 && v.owner != "root") || (v.gid != 0 && v.group != "root")
-        ) secretsForUsers) == { };
+            _: v: (v.uid != 0 && v.owner != "root") || (v.gid != 0 && v.group != "root")
+          )
+          secretsForUsers)
+        == {};
       message = "neededForUsers cannot be used for secrets that are not root-owned";
     }
     {
-      assertion = secretsForUsers != { } && sysusersEnabled -> config.users.mutableUsers;
+      assertion = secretsForUsers != {} && sysusersEnabled -> config.users.mutableUsers;
       message = ''
         systemd.sysusers.enable in combination with sops.secrets.<name>.neededForUsers can only work with config.users.mutableUsers enabled.
         See https://github.com/Mic92/sops-nix/issues/475
