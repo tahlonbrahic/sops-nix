@@ -445,7 +445,15 @@ in {
       sops.environment.SOPS_GPG_EXEC = lib.mkIf (cfg.gnupg.home != null || cfg.gnupg.sshKeyPaths != []) (
         lib.mkDefault "${pkgs.gnupg}/bin/gpg"
       );
-      sops.environment.PATH = lib.makeBinPath cfg.age.plugins;
+
+      systemd.services.sops-install-secrets.environment.PATH = let
+        path = config.systemd.services.sops-install-secrets.path;
+      in
+        lib.mkForce "${lib.makeBinPath path}:${lib.makeSearchPathOutput "bin" "sbin" path}";
+      systemd.services.sops-install-secrets.path = lib.lists.optionals (config.sops.environment ? PATH) (lib.pipe config.sops.environment.PATH [
+        (lib.strings.splitString ":")
+        (builtins.map (lib.strings.removeSuffix "/bin"))
+      ]);
 
       # When using sysusers we no longer are started as an activation script because those are started in initrd while sysusers is started later.
       systemd.services.sops-install-secrets = lib.mkIf (regularSecrets != {} && useSystemdActivation) {
