@@ -15,6 +15,7 @@ in
 
     sops = pkgs.callPackage ./pkgs/sops {};
 
+    age-plugin-yubikey = pkgs.callPackage ./pkgs/age-plugin-yubikey {};
     age-fido2-hmac = pkgs.callPackage ./pkgs/age-fido2-hmac {};
     sops-fido2-hmac = pkgs.callPackage ./pkgs/sops-fido2-hmac {inherit sops;};
 
