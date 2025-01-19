@@ -3,6 +3,7 @@
   buildGoModule,
   stdenv,
   go,
+  vendorHash,
   ...
 }:
 buildGoModule {
@@ -16,8 +17,6 @@ buildGoModule {
   ];
 
   subPackages = ["pkgs/sops-install-secrets"];
-
-  deleteVendor = true;
 
   # requires root privileges for tests
   doCheck = false;
@@ -37,7 +36,7 @@ buildGoModule {
       fi
     '';
 
-  vendorHash = lib.fakeSha256;
+  inherit vendorHash;
 
   meta = with lib; {
     description = "Atomic secret provisioning based on sops";
