@@ -37,7 +37,7 @@ buildGoModule {
       fi
     '';
 
-  vendorHash = null;
+  vendorHash = lib.fakeSha256;
 
   meta = with lib; {
     description = "Atomic secret provisioning based on sops";
