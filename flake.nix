@@ -38,7 +38,9 @@
     # public outputs
     {
       overlays.default = final: prev: let
-        localPkgs = import ./default.nix {pkgs = final;};
+        localPkgs = import ./default.nix {
+          pkgs = final;
+        };
       in {
         inherit
           (localPkgs)
@@ -64,7 +66,9 @@
         sops = ./modules/nix-darwin;
         default = self.darwinModules.sops;
       };
-      packages = eachSystem ({pkgs, ...}: import ./default.nix {inherit pkgs;});
+      packages =
+        eachSystem ({pkgs, ...}:
+          import ./default.nix {inherit pkgs;});
     }
     //
     # dev outputs
