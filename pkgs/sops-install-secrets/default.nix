@@ -16,7 +16,6 @@ buildGoModule {
     "pkgs/sops-install-secrets.*"
   ];
 
-  GOFLAGS = ["-mod=vendor"];
   proxyVendor = true;
 
   subPackages = ["pkgs/sops-install-secrets"];
@@ -39,7 +38,7 @@ buildGoModule {
       fi
     '';
 
-  inherit vendorHash;
+  vendorHash = lib.fakeHash;
 
   meta = with lib; {
     description = "Atomic secret provisioning based on sops";
