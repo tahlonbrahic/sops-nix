@@ -15,12 +15,12 @@ buildGoModule {
     "pkgs/sops-install-secrets.*"
   ];
 
-  subPackages = [ "pkgs/sops-install-secrets" ];
+  subPackages = ["pkgs/sops-install-secrets"];
 
   # requires root privileges for tests
   doCheck = false;
 
-  outputs = [ "out" ] ++ lib.lists.optionals (stdenv.isLinux) [ "unittest" ];
+  outputs = ["out"] ++ lib.lists.optionals (stdenv.isLinux) ["unittest"];
 
   postInstall =
     ''
@@ -35,13 +35,13 @@ buildGoModule {
       fi
     '';
 
-  inherit vendorHash;
+  vendorHash = null;
 
   meta = with lib; {
     description = "Atomic secret provisioning based on sops";
     homepage = "https://github.com/Mic92/sops-nix";
     license = licenses.mit;
-    maintainers = with maintainers; [ mic92 ];
+    maintainers = with maintainers; [mic92];
     platforms = platforms.linux ++ platforms.darwin;
   };
 }
