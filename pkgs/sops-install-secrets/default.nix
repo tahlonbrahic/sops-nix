@@ -17,9 +17,7 @@ buildGoModule {
 
   subPackages = ["pkgs/sops-install-secrets"];
 
-  env = {
-    GOFLAGS = "-mod=mod";
-  };
+  deleteVendor = true;
 
   # requires root privileges for tests
   doCheck = false;
