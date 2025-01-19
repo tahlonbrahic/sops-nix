@@ -17,6 +17,7 @@ buildGoModule {
   ];
 
   GOFLAGS = ["-mod=vendor"];
+  proxyVendor = true;
 
   subPackages = ["pkgs/sops-install-secrets"];
 
