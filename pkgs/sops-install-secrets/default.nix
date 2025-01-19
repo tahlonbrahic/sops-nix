@@ -2,8 +2,8 @@
   lib,
   buildGoModule,
   stdenv,
-  vendorHash,
   go,
+  ...
 }:
 buildGoModule {
   pname = "sops-install-secrets";
@@ -16,6 +16,10 @@ buildGoModule {
   ];
 
   subPackages = ["pkgs/sops-install-secrets"];
+
+  env = {
+    GOFLAGS = "-mod=mod";
+  };
 
   # requires root privileges for tests
   doCheck = false;
