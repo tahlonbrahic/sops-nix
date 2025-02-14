@@ -38,7 +38,7 @@ buildGoModule {
       fi
     '';
 
-  vendorHash = "sha256-PJkvweLFRBGsriOiiW7DjgoitSUmdSDrKBqwjh4y+X4=";
+  vendorHash = "sha256-R/d98gC0eYivjKI/MA2NndgtpjpmSWFaKYq28ndl4G8=";
 
   meta = with lib; {
     description = "Atomic secret provisioning based on sops";
