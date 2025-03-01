@@ -1,16 +1,19 @@
 {
-    sops,
-    fetchFromGitHub,
-}: sops.overrideAttrs {
+  sops,
+  fetchFromGitHub,
+}:
+sops.overrideAttrs {
+  version = "sops";
 
-    version = "age-sops";
+  src = fetchFromGitHub {
+    owner = "age-sops";
+    repo = "sops";
+    rev = "a891aaa1707d9ac2586bc5b0984e3bce60e084cc";
+    hash = "sha256-wFGFq6EoRYh8kD8ZELKATsitHEB0uz4/IBZL4+L0U1A=";
+  };
 
-    src = fetchFromGitHub {
-        owner = "age-sops";
-        repo = "sops";
-        rev = "df6d1d330d9fcd461e1f15852229f8cf41cab061";
-        hash = "sha256-h3Zc++m2v9jLDGGVqQVq911ZOsZ0+DN7FgpIq+rleKE=";
-    };
+  vendorHash = "sha256-B6g5xvPNGQzmQNHC09CTMnc5PrESYKiVNJTuy9eIhTs=";
 
-    vendorHash = "sha256-WChizpCjaRYcFoCbfLKNE6SPk1PV/aF3OkG62YdnpOw=";
+  installCheckPhase = "";
+  versionCheckPhase = "";
 }
