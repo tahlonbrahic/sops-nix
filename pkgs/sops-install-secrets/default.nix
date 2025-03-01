@@ -11,14 +11,17 @@ buildGoModule {
   version = "0.0.1";
 
   src = lib.sourceByRegex ../.. [
+    "vendor"
     "go\.(mod|sum)"
     "pkgs"
     "pkgs/sops-install-secrets.*"
   ];
 
-  proxyVendor = true;
+  proxyVendor = false;
 
   subPackages = ["pkgs/sops-install-secrets"];
+
+  #buildFlags = ["-mod=readonly"];
 
   # requires root privileges for tests
   doCheck = false;
@@ -38,7 +41,7 @@ buildGoModule {
       fi
     '';
 
-  vendorHash = "sha256-g9tKe9pldhP52LcMxytZuu5uELpBjaB8VcOnXYiQg18=";
+  vendorHash = "sha256-zFOly/V466P1wAbbx46HEYXsMACLpFGVSsqoG1HWwVk=";
 
   meta = with lib; {
     description = "Atomic secret provisioning based on sops";

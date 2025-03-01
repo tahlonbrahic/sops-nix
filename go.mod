@@ -1,8 +1,6 @@
 module github.com/TahlonBrahic/sops-nix
 
-go 1.23.0
-
-toolchain go1.23.3
+go 1.23.5
 
 require (
 	github.com/Mic92/ssh-to-age v0.0.0-20240115094500-460a2109aaf0
@@ -127,9 +125,4 @@ require (
 	google.golang.org/grpc v1.70.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-//github.com/striply/striply latest // indirect
-//github.com/urfave/cli/v2 v2.22.2 // indirect
-//github.com/valyala/fasthttp v1.38.0 // indirect
-//github.com/xenitab/prompt v0.3.0 // indirect
-//github.com/zxjz/s3util v1.1.0 // indirect
 )
