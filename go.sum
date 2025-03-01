@@ -107,6 +107,8 @@ github.com/aws/smithy-go v1.22.2 h1:6D9hW43xKFrRx/tXXfAlIZc4JI+yQe6snnWcQyxSyLQ=
 github.com/aws/smithy-go v1.22.2/go.mod h1:irrKGvNn1InZwb2d7fkIRNucdfwR8R+Ts3wxYa/cJHg=
 github.com/blang/semver v3.5.1+incompatible h1:cQNTCjp13qL8KC3Nbxr/y2Bqb63oX6wdnnjpJbkM4JQ=
 github.com/blang/semver v3.5.1+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnwebNt5EWlYSAyrTnjyyk=
+github.com/brianmcgee/sops/v3 v3.9.5-0.20250227090621-6157d86d7524 h1:ZXtXUquuFJ5+6wQiFCVlyFst7lG0wii1WgZI+XCRkCc=
+github.com/brianmcgee/sops/v3 v3.9.5-0.20250227090621-6157d86d7524/go.mod h1:TybL/si5/4QHS3i8fuiuMNEyy/2gM6hPH3Y+wcVABO0=
 github.com/cenkalti/backoff/v4 v4.3.0 h1:MyRJ/UdXutAwSAT+s3wNd7MfTIcy71VQueUuFK343L8=
 github.com/cenkalti/backoff/v4 v4.3.0/go.mod h1:Y3VNntkOUPxTVeUxJ/G5vcM//AlwfmyYozVcomhLiZE=
 github.com/census-instrumentation/opencensus-proto v0.4.1 h1:iKLQ0xPNFxR/2hzXZMrBo8f1j86j5WHzznCCQxV/b8g=
@@ -146,8 +148,6 @@ github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2
 github.com/felixge/httpsnoop v1.0.4/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
 github.com/getsops/gopgagent v0.0.0-20241224165529-7044f28e491e h1:y/1nzrdF+RPds4lfoEpNhjfmzlgZtPqyO3jMzrqDQws=
 github.com/getsops/gopgagent v0.0.0-20241224165529-7044f28e491e/go.mod h1:awFzISqLJoZLm+i9QQ4SgMNHDqljH6jWV0B36V5MrUM=
-github.com/getsops/sops/v3 v3.9.5-0.20250227201022-1b99a29f727b h1:kTyaeCgvkn5E/7T/8M4+ujNO6ywei31ArEYwP4Uvpys=
-github.com/getsops/sops/v3 v3.9.5-0.20250227201022-1b99a29f727b/go.mod h1:TybL/si5/4QHS3i8fuiuMNEyy/2gM6hPH3Y+wcVABO0=
 github.com/go-jose/go-jose/v4 v4.0.5 h1:M6T8+mKZl/+fNNuFHvGIzDz7BTLQPIounk/b9dw3AaE=
 github.com/go-jose/go-jose/v4 v4.0.5/go.mod h1:s3P1lRrkT8igV8D9OjyL4WRyHvjB6a4JSllnOrmmBOA=
 github.com/go-logr/logr v1.2.2/go.mod h1:jdQByPbusPIv2/zmleS9BjJVeZ6kBagPoEUsqbVz/1A=

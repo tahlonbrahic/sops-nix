@@ -400,7 +400,7 @@ github.com/felixge/httpsnoop
 # github.com/getsops/gopgagent v0.0.0-20241224165529-7044f28e491e
 ## explicit
 github.com/getsops/gopgagent
-# github.com/getsops/sops/v3 v3.9.5-0.20250227201022-1b99a29f727b
+# github.com/getsops/sops/v3 v3.9.5-0.20250227201022-1b99a29f727b => github.com/brianmcgee/sops/v3 v3.9.5-0.20250227090621-6157d86d7524
 ## explicit; go 1.22
 github.com/getsops/sops/v3
 github.com/getsops/sops/v3/aes

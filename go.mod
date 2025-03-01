@@ -126,3 +126,5 @@ require (
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/getsops/sops/v3 v3.9.5-0.20250227201022-1b99a29f727b => github.com/brianmcgee/sops/v3 v3.9.5-0.20250227090621-6157d86d7524
